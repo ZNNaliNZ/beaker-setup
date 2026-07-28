@@ -4,9 +4,8 @@ tasks:
   - name: training-replica-0
     image:
       beaker: ai2/cuda13.0-ubuntu22.04-torch2.11.0
-    # Dev tooling (build-essential/sudo/sysstat/nano/bat/..., atuin+ble.sh, claude,
-    # codex, and the `claudec` alias) is baked into the yuhengw/dev image, so this
-    # command only does task-specific setup: clone the repo and run the debug script.
+    # Clone the public setup repo, then dev.sh installs tools, configures the
+    # persistent SSH/API state, and keeps the development container alive.
     command: [bash, -c, "echo $OP_EXP_NAME && mkdir -p ~/Projects && git clone https://github.com/ZNNaliNZ/beaker-setup.git ~/Projects/beaker-setup && cd ~/Projects/beaker-setup && bash dev.sh"]
     envVars:
       - name: OP_CHECKOUT_REF
@@ -43,4 +42,3 @@ tasks:
     propagatePreemption: false
 retry:
   allowedTaskRetries: 10
-
