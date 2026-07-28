@@ -7,7 +7,7 @@ tasks:
     # Dev tooling (build-essential/sudo/sysstat/nano/bat/..., atuin+ble.sh, claude,
     # codex, and the `claudec` alias) is baked into the yuhengw/dev image, so this
     # command only does task-specific setup: clone the repo and run the debug script.
-    command: [bash, -c, "echo $OP_EXP_NAME && mkdir -p ~/Projects && git clone https://github.com/Arrokothwh/flow_matching.git ~/Projects/flow_matching && cd ~/Projects/flow_matching && bash debuing.sh"]
+    command: [bash, -c, "echo $OP_EXP_NAME && mkdir -p ~/Projects && git clone https://github.com/ZNNaliNZ/beaker-setup.git ~/Projects/flow_matching && cd ~/Projects/flow_matching && bash debuing.sh"]
     envVars:
       - name: OP_CHECKOUT_REF
         value: master
