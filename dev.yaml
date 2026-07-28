@@ -1,0 +1,46 @@
+version: v2
+description: Dev
+tasks:
+  - name: training-replica-0
+    image:
+      beaker: ai2/cuda13.0-ubuntu22.04-torch2.11.0
+    # Dev tooling (build-essential/sudo/sysstat/nano/bat/..., atuin+ble.sh, claude,
+    # codex, and the `claudec` alias) is baked into the yuhengw/dev image, so this
+    # command only does task-specific setup: clone the repo and run the debug script.
+    command: [bash, -c, "echo $OP_EXP_NAME && mkdir -p ~/Projects && git clone https://github.com/Arrokothwh/flow_matching.git ~/Projects/flow_matching && cd ~/Projects/flow_matching && bash debuing.sh"]
+    envVars:
+      - name: OP_CHECKOUT_REF
+        value: master
+      - name: OP_EXP_CHECKOUT_REF
+        value: master
+      - name: OP_WODS_CHECKOUT_REF
+        value: master
+      - name: OP_EXP_NAME
+        value: test
+    datasets:
+      - mountPath: /weka/oe-training-default
+        source:
+          weka: oe-training-default
+      - mountPath: /weka/oe-mm-default
+        source:
+          weka: oe-mm-default
+      - mountPath: /var/run/docker.sock
+        source:
+          hostPath: /var/run/docker.sock
+    result:
+      path: /tmp/op_output
+    resources:
+      gpuCount: 8
+      sharedMemory: 400 GB
+    context:
+      priority: high
+      autoResume: false
+    constraints:
+      cluster:
+        - ai2/neptune
+    hostNetworking: true
+    propagateFailure: false
+    propagatePreemption: false
+retry:
+  allowedTaskRetries: 10
+
