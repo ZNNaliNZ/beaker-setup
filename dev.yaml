@@ -32,7 +32,7 @@ tasks:
       gpuCount: 8
       sharedMemory: 400 GB
     context:
-      priority: high
+      priority: normal
       autoResume: false
     constraints:
       cluster:
