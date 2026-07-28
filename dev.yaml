@@ -36,7 +36,7 @@ tasks:
       autoResume: false
     constraints:
       cluster:
-        - ai2/triton
+        - ai2/neptune
     hostNetworking: true
     propagateFailure: false
     propagatePreemption: false
