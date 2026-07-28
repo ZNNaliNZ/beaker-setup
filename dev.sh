@@ -216,7 +216,7 @@ configure_shell_tools() {
 }
 
 clone_optional_target_repo() {
-  [[ -n "${TARGET_REPO_SSH_URL:-}" ]] || return
+  [[ -n "${TARGET_REPO_SSH_URL:-}" ]] || return 0
   [[ "$TARGET_REPO_SSH_URL" == git@github.com:* ]] \
     || die "TARGET_REPO_SSH_URL must be an SSH URL such as git@github.com:OWNER/REPO.git"
 
