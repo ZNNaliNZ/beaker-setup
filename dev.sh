@@ -41,6 +41,8 @@ chmod 0700 "$BEAKER_SETUP_HOME" "$CODEX_HOME" "$CLAUDE_CONFIG_DIR"
 
 install_system_tools() {
   local -a root_cmd=()
+  local -a broken_lunarg_sources=()
+  local source_file
 
   if [[ "$(id -u)" -ne 0 ]]; then
     command -v sudo >/dev/null 2>&1 \
@@ -50,6 +52,21 @@ install_system_tools() {
 
   command -v apt-get >/dev/null 2>&1 \
     || die "this script currently requires an Ubuntu/Debian base image"
+
+  # The CUDA 13 Ubuntu 22.04 image currently contains a version-pinned
+  # LunarG repository that returns 404 and makes every apt-get update fail.
+  # None of the development packages below require this repository.
+  mapfile -t broken_lunarg_sources < <(
+    "${root_cmd[@]}" grep -rlF \
+      --include='*.list' \
+      --include='*.sources' \
+      'packages.lunarg.com/vulkan/1.3.275' \
+      /etc/apt/sources.list.d 2>/dev/null || true
+  )
+  for source_file in "${broken_lunarg_sources[@]}"; do
+    log "Disabling obsolete LunarG APT source: ${source_file}"
+    "${root_cmd[@]}" mv -- "$source_file" "${source_file}.disabled"
+  done
 
   log "Installing system development tools"
   "${root_cmd[@]}" apt-get update
